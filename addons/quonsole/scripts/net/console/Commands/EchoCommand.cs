@@ -53,8 +53,6 @@ public class EchoCommand : BaseInternalCommand
         if (argCount < 1)
             throw new TooFewArgumentsException(GetName(), argCount, 1);
 
-        GD.Print(string.Join(' ', context.Arguments));
-        GD.Print(string.Join(' ', context.NonTransformedArguments));
         context.Console.Info(string.Join(' ', context.Arguments));
 
         RaiseExecutedEvent(context);
