@@ -1,0 +1,122 @@
+[gd_scene load_steps=6 format=3 uid="uid://b0rij086fkbgn"]
+
+[ext_resource type="PackedScene" uid="uid://cf354rjk0ir4w" path="res://scenes/area_3d_command.tscn" id="1_y1v3j"]
+
+[sub_resource type="GDScript" id="GDScript_asacr"]
+script/source = "extends CharacterBody3D
+
+@onready var gravity: float = ProjectSettings.get_setting(\"physics/3d/default_gravity\")
+
+var _move_forward: bool = false
+var _move_backward: bool = false
+var _move_leftward: bool = false
+var _move_rightward: bool = false
+
+@onready var _move_speed: float = Console.get_variable(\"pl_move_speed\").as_float()
+
+func bind_direction_command(_name: String, callback: Callable):
+	Console.connect_command(\"+%s\" % [_name], \\
+		func (_sender: Object, _guid: String, _delta: float, _data: Dictionary, _args: Array):
+			callback.call(true))
+	Console.connect_command(\"-%s\" % [_name], \\
+		func (_sender: Object, _guid: String, _delta: float, _data: Dictionary, _args: Array):
+			callback.call(false))
+
+func _ready() -> void:
+	bind_direction_command(\"forward\", \\
+		func (pressed: bool) -> void: _move_forward = pressed)
+	bind_direction_command(\"backward\", \\
+		func (pressed: bool) -> void: _move_backward = pressed)
+	bind_direction_command(\"leftward\", \\
+		func (pressed: bool) -> void: _move_leftward = pressed)
+	bind_direction_command(\"rightward\", \\
+		func (pressed: bool) -> void: _move_rightward = pressed)
+
+	Console.connect_variable(\"pl_move_speed\", \\
+		func (cvar: ConsoleVariable, _val): \\
+			_move_speed = cvar.as_float())
+
+func _physics_process(_delta: float) -> void:
+	
+	var xInp = (-1.0 if _move_leftward else 0.0) + \\
+				(1.0 if _move_rightward else 0.0)
+	
+	var zInp = (-1.0 if _move_forward else 0.0) + \\
+				(1.0 if _move_backward else 0.0)
+
+	var newVelocity = \\
+		Vector3(xInp, 0, zInp) * _move_speed + \\
+		Vector3.DOWN * gravity
+
+	velocity = (velocity + newVelocity) * 0.5
+	
+	move_and_slide()
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s2wko"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_287jp"]
+
+[sub_resource type="Environment" id="Environment_wvsmd"]
+background_mode = 1
+background_color = Color(0.266667, 0.529412, 0.717647, 1)
+ambient_light_color = Color(1, 1, 1, 1)
+
+[node name="Main" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.249939, 0)
+use_collision = true
+size = Vector3(10, 0.5, 10)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.84102, 0.541004, 0, -0.541004, 0.84102, 0, 3.79028, 7.02501)
+current = true
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13768, 0)
+script = SubResource("GDScript_asacr")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CharacterBody3D"]
+material = SubResource("StandardMaterial3D_s2wko")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CylinderShape3D_287jp")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_wvsmd")
+
+[node name="Label3D2" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000923157, 2.73363, 0)
+pixel_size = 0.0045
+billboard = 1
+text = "Move player with WASD into these Area3DCommand nodes
+to execute a console command.
+
+Press F10-F12 to change player speed.
+Press Escape to exit."
+
+[node name="Area3D" parent="." instance=ExtResource("1_y1v3j")]
+on_entered = "play UI_013; print \"Welcome player!\";"
+on_exited = "play UI_013; print \"Goodbye player!\""
+
+[node name="Label3D" type="Label3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.451509, 0)
+pixel_size = 0.0045
+billboard = 1
+text = "Print message"
+
+[node name="Area3D2" parent="." instance=ExtResource("1_y1v3j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.74041, 1.25114, 0)
+on_entered = "play UI_005; dbg_draw wireframe"
+on_exited = "play UI_005; dbg_draw disabled"
+
+[node name="Label3D" type="Label3D" parent="Area3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.451509, 0)
+pixel_size = 0.0045
+billboard = 1
+text = "View in wireframe mode"
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.0144103, 0.661217, -0.750056, -0.188159, 0.738526, 0.647438, 0.982033, 0.1318, 0.135056, 0, 4.80838, 0)

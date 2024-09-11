@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=3 uid="uid://ccg5rr5coufel"]
+
+[ext_resource type="Script" path="res://addons/quonsole/scripts/gd/console/console_printer.gd" id="1_hhlbj"]
+[ext_resource type="FontFile" uid="uid://bpb3sdjtx4m41" path="res://addons/quonsole/assets/monogram.ttf" id="1_ynoty"]
+[ext_resource type="FontFile" uid="uid://dkqhi2yptfpoq" path="res://addons/quonsole/assets/monogram-extended-italic.ttf" id="2_unnmd"]
+[ext_resource type="Script" path="res://addons/quonsole/scripts/gd/console/console_printer_item.gd" id="3_0rufi"]
+
+[node name="ConsolePrinter" type="Control"]
+show_behind_parent = true
+top_level = true
+z_index = -4096
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_hhlbj")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.565
+offset_left = 1.0
+offset_right = 1.0
+offset_bottom = -0.119995
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_right = -12
+
+[node name="console_printer" type="BoxContainer" parent="MarginContainer"]
+z_index = -4096
+layout_mode = 2
+mouse_filter = 2
+alignment = 2
+vertical = true
+
+[node name="console_print" type="RichTextLabel" parent="MarginContainer/console_printer"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_ynoty")
+theme_override_fonts/mono_font = ExtResource("1_ynoty")
+theme_override_fonts/italics_font = ExtResource("2_unnmd")
+theme_override_fonts/bold_italics_font = ExtResource("2_unnmd")
+theme_override_fonts/bold_font = ExtResource("1_ynoty")
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 24
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+bbcode_enabled = true
+text = "Placeholder"
+fit_content = true
+scroll_active = false
+scroll_following = true
+shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
+script = ExtResource("3_0rufi")

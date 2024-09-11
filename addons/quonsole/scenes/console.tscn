@@ -1,0 +1,91 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwgyhrdej0ap3"]
+
+[ext_resource type="Script" path="res://addons/quonsole/scripts/net/console/ConsoleControl.cs" id="1_14ial"]
+[ext_resource type="FontFile" uid="uid://ruuhvwgkpvwi" path="res://addons/quonsole/assets/monogram-extended.ttf" id="2_xivxk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vpupr"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.105882, 0.298039, 0.239216, 0.784314)
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vbw8j"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.784314)
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_detail = 1
+
+[node name="Console" type="Control"]
+process_mode = 3
+top_level = true
+z_index = 4096
+z_as_relative = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+script = ExtResource("1_14ial")
+metadata/_edit_use_anchors_ = true
+
+[node name="console_panel" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_bottom = 64.0
+theme_override_constants/separation = 1
+
+[node name="console_output" type="RichTextLabel" parent="console_panel"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_neighbor_bottom = NodePath("../console_input")
+focus_next = NodePath("../ConsoleInput")
+focus_previous = NodePath("../ConsoleInput")
+focus_mode = 2
+theme_override_fonts/normal_font = ExtResource("2_xivxk")
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 24
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxFlat_vpupr")
+theme_override_styles/normal = SubResource("StyleBoxFlat_vpupr")
+text = "ConsoleOutput"
+scroll_following = true
+autowrap_mode = 0
+context_menu_enabled = true
+selection_enabled = true
+deselect_on_focus_loss_enabled = false
+
+[node name="console_input" type="LineEdit" parent="console_panel"]
+layout_mode = 2
+size_flags_vertical = 8
+focus_neighbor_top = NodePath("../console_output")
+focus_next = NodePath("../console_output")
+focus_previous = NodePath("../console_output")
+theme_override_colors/clear_button_color_pressed = Color(0.419608, 0.419608, 0.815686, 1)
+theme_override_colors/clear_button_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(0.419608, 0.419608, 0.815686, 1)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("2_xivxk")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxFlat_vbw8j")
+theme_override_styles/normal = SubResource("StyleBoxFlat_vbw8j")
+text = "ConsoleInput"
+clear_button_enabled = true
+caret_blink = true
+caret_blink_interval = 0.5

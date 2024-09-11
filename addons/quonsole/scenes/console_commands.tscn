@@ -1,0 +1,129 @@
+[gd_scene load_steps=8 format=3 uid="uid://bys0nmmf687q8"]
+
+[ext_resource type="Script" path="res://addons/quonsole/scripts/gd/binder/bind_console_command.gd" id="1_rssqw"]
+[ext_resource type="Script" path="res://addons/quonsole/scripts/gd/binder/unbind_console_command.gd" id="2_ws6w3"]
+
+[sub_resource type="GDScript" id="GDScript_g7ind"]
+script/source = "extends ConsoleCommand
+"
+
+[sub_resource type="GDScript" id="GDScript_xmjud"]
+script/source = "extends ConsoleCommand
+"
+
+[sub_resource type="GDScript" id="GDScript_7fyp7"]
+script/source = "extends ConsoleCommand
+
+func _on_executed(_delta: float, _data: Dictionary, _args: Array) -> bool:
+	var key = \"%s_count\" % [_guid]
+
+	var count = _data[key] if _data.has(key) else 0
+
+	count += 1
+	
+	Console.info(\"Count: %s - %s\" % [_guid, count])
+	
+	_data[key] = count
+
+	if count > 3:
+		_data.erase(key)
+		var cmd: ConsoleCommand = Console.get_command(\"echo\")
+		cmd.execute([\"Hello World!\"])
+		return true
+	
+	super._on_executed(_delta, _data, _args)
+	
+	return false
+
+func _on_help_executed(_delta: float, _data: Dictionary, _args: Array) -> bool:
+	Console.info(\"Prints a series of lines to demonstrate continued execution.\")
+	super._on_help_executed(_delta, _data, _args)
+	return true
+"
+
+[sub_resource type="GDScript" id="GDScript_17u78"]
+script/source = "extends ConsoleCommand
+
+@onready var player: AudioStreamPlayer = $AudioStreamPlayer
+
+func _on_executed(_delta: float, _data: Dictionary, _args: Array) -> bool:
+	
+	if player.playing:
+		player.stop()
+	
+	var playlist: AudioStreamPlaylist = \\
+		AudioStreamPlaylist.new() if player.stream == null else player.stream
+	
+	playlist.stream_count = 0
+	
+	if _args != null and _args.size() > 0:
+		playlist.loop = false
+		playlist.stream_count = _args.size()
+		for i in range(0, _args.size()):
+			var aud_file: String = \"assets/%s.wav\" % [_args[i]]
+
+			if not FileAccess.file_exists(aud_file):
+				Console.error(\"Audio file %s does not exist\" % aud_file)
+				continue
+
+			var aud: AudioStreamWAV = ResourceLoader.load(aud_file)
+			playlist.set_list_stream(i, aud)
+
+	player.stream = playlist
+	player.play()
+
+	super._on_executed(_delta, _data, _args)
+	return true
+
+func _on_help_executed(_delta: float, _data: Dictionary, _args: Array) -> bool:
+	Console.info(\"Plays one or more given sounds.\")
+	super._on_help_executed(_delta, _data, _args)
+	return true
+"
+
+[sub_resource type="AudioStreamPlaylist" id="AudioStreamPlaylist_cveb4"]
+
+[node name="Commands" type="Node"]
+
+[node name="Movement" type="Node" parent="."]
+
+[node name="+forward" type="Node" parent="Movement"]
+script = SubResource("GDScript_g7ind")
+
+[node name="-forward" type="Node" parent="Movement"]
+script = SubResource("GDScript_xmjud")
+
+[node name="+backward" type="Node" parent="Movement"]
+script = SubResource("GDScript_xmjud")
+
+[node name="-backward" type="Node" parent="Movement"]
+script = SubResource("GDScript_xmjud")
+
+[node name="+leftward" type="Node" parent="Movement"]
+script = SubResource("GDScript_xmjud")
+
+[node name="-leftward" type="Node" parent="Movement"]
+script = SubResource("GDScript_xmjud")
+
+[node name="+rightward" type="Node" parent="Movement"]
+script = SubResource("GDScript_xmjud")
+
+[node name="-rightward" type="Node" parent="Movement"]
+script = SubResource("GDScript_xmjud")
+
+[node name="System" type="Node" parent="."]
+
+[node name="test" type="Node" parent="System"]
+script = SubResource("GDScript_7fyp7")
+
+[node name="play" type="Node" parent="System"]
+script = SubResource("GDScript_17u78")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="System/play"]
+stream = SubResource("AudioStreamPlaylist_cveb4")
+
+[node name="bind" type="Node" parent="System"]
+script = ExtResource("1_rssqw")
+
+[node name="unbind" type="Node" parent="System"]
+script = ExtResource("2_ws6w3")
