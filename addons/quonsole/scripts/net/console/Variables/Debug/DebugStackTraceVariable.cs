@@ -23,38 +23,40 @@ SOFTWARE.
 */
 
 using Godot;
-using System;
-using System.Linq;
 using Quonsole.Interfaces;
 using Quonsole.Attributes;
 
 namespace Quonsole.Variables;
 
 [Variable]
-public class WindowModeVariable : BaseInternalVariable
+public class DebugStackTraceVariable : BaseInternalVariable
 {
     public override string GetName()
     {
-        return "wnd_mode";
+        return "dbg_stacktrace";
+    }
+
+    public bool Enabled
+    {
+        get;
+        private set;
     }
 
     public override ExecutionResult ExecuteHelp(IExecutionContext context)
     {
-        var values = Enum.GetValues<DisplayServer.WindowMode>().Select(x => $"({x.ToString("d")}) {x.ToString("G")}");
-        context.Console.Info($"The window display mode. Possible values: [\n\t{string.Join(", \n\t", values)}\n].");
+        context.Console.Info($"Print more detailed error messages");
+        RaiseHelpEvent(context);
         return ExecutionResult.Done;
     }
 
     public override Variant Get()
     {
-        var mode = DisplayServer.WindowGetMode();
-        return Variant.From(mode.ToString("G"));
+        return Variant.From(Enabled);
     }
 
     public override void Set(Variant value)
     {
-        var mode = (DisplayServer.WindowMode)Enum.Parse(typeof(DisplayServer.WindowMode), value.AsString(), true);
-        DisplayServer.WindowSetMode(mode);
-        RaiseChangedEvent(value);
+        Enabled = value.AsBool();
+        RaiseChangedEvent(Variant.From(Enabled));
     }
 }

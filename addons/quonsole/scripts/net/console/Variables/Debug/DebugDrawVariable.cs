@@ -23,36 +23,41 @@ SOFTWARE.
 */
 
 using Godot;
-using Quonsole.Attributes;
+using System;
+using System.Linq;
 using Quonsole.Interfaces;
+using Quonsole.Attributes;
 
 namespace Quonsole.Variables;
 
 [Variable]
-public class WindowHeightVariable : BaseInternalVariable
+public class DebugDrawVariable : BaseInternalVariable
 {
     public override string GetName()
     {
-        return "wnd_height";
+        return "dbg_draw";
     }
 
     public override ExecutionResult ExecuteHelp(IExecutionContext context)
     {
-        context.Console.Info("The window height");
+        var values = Enum.GetValues<Viewport.DebugDrawEnum>().Select(x => $"({x.ToString("d")}) {x.ToString("G")}");
+        context.Console.Info($"The debug drawing mode. Possible values: [\n\t{string.Join(", \n\t", values)}\n].");
+        RaiseHelpEvent(context);
         return ExecutionResult.Done;
     }
 
     public override Variant Get()
     {
-        var height = DisplayServer.WindowGetSize().Y;
-        return Variant.From(height);
+        var st = Engine.GetMainLoop() as SceneTree;
+        var mode = st.Root.GetViewport().DebugDraw;
+        return mode.ToString("G");
     }
 
     public override void Set(Variant value)
     {
-        var height = value.AsInt32();
-        var size = DisplayServer.WindowGetSize();
-        DisplayServer.WindowSetSize(new Vector2I(size.X, height));
+        var mode = (Viewport.DebugDrawEnum)Enum.Parse(typeof(Viewport.DebugDrawEnum), value.AsString(), true);
+        var st = Engine.GetMainLoop() as SceneTree;
+        st.Root.GetViewport().DebugDraw = mode;
         RaiseChangedEvent(value);
     }
 }
