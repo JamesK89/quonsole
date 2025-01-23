@@ -521,10 +521,16 @@ func handle_joy_input(joy: InputEventJoypadButton) -> void:
 		_joy_bind_action[key_name] = action
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if Console.is_active():
+		return
+
 	if event is InputEventKey:
 		handle_key_input(event)
 
 func _unhandled_input(event: InputEvent) -> void:
+	if Console.is_active():
+		return
+
 	if event is InputEventMouseButton:
 		handle_mouse_input(event)
 	elif event is InputEventJoypadButton:

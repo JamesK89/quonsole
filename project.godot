@@ -24,6 +24,10 @@ Bindings="*res://addons/quonsole/scripts/gd/binder/input_binder.gd"
 
 project/assembly_name="Quonsole"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/quonsole/plugin.cfg")
+
 [input]
 
 "Toggle Console"={

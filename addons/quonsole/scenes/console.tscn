@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bwgyhrdej0ap3"]
 
 [ext_resource type="Script" path="res://addons/quonsole/scripts/net/console/ConsoleControl.cs" id="1_14ial"]
-[ext_resource type="FontFile" uid="uid://ruuhvwgkpvwi" path="res://addons/quonsole/assets/monogram-extended.ttf" id="2_xivxk"]
+[ext_resource type="FontFile" uid="uid://duy58e8jj4dct" path="res://addons/quonsole/assets/monogram-extended.ttf" id="2_xivxk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vpupr"]
 content_margin_left = 4.0
@@ -35,6 +35,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 focus_mode = 2
+mouse_filter = 2
 script = ExtResource("1_14ial")
 metadata/_edit_use_anchors_ = true
 
@@ -44,15 +45,17 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_bottom = 64.0
-theme_override_constants/separation = 1
+theme_override_constants/separation = 0
 
 [node name="console_output" type="RichTextLabel" parent="console_panel"]
 layout_mode = 2
 size_flags_vertical = 3
+focus_neighbor_top = NodePath("../console_input")
 focus_neighbor_bottom = NodePath("../console_input")
-focus_next = NodePath("../ConsoleInput")
-focus_previous = NodePath("../ConsoleInput")
+focus_next = NodePath("../console_input")
+focus_previous = NodePath("../console_input")
 focus_mode = 2
+mouse_filter = 1
 theme_override_fonts/normal_font = ExtResource("2_xivxk")
 theme_override_font_sizes/bold_italics_font_size = 24
 theme_override_font_sizes/italics_font_size = 24
@@ -72,8 +75,10 @@ deselect_on_focus_loss_enabled = false
 layout_mode = 2
 size_flags_vertical = 8
 focus_neighbor_top = NodePath("../console_output")
+focus_neighbor_bottom = NodePath("../console_output")
 focus_next = NodePath("../console_output")
 focus_previous = NodePath("../console_output")
+mouse_filter = 1
 theme_override_colors/clear_button_color_pressed = Color(0.419608, 0.419608, 0.815686, 1)
 theme_override_colors/clear_button_color = Color(1, 1, 1, 1)
 theme_override_colors/selection_color = Color(0.419608, 0.419608, 0.815686, 1)

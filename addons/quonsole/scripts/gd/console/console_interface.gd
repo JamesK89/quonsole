@@ -62,8 +62,8 @@ func _ready():
 	call_deferred("load_autoexec")
 
 func load_autoexec() -> void:
-	if FileAccess.file_exists("autoexec.cfg"):
-		_ui_console.ExecuteFile("autoexec.cfg")
+	if FileAccess.file_exists("res://autoexec.cfg"):
+		_ui_console.ExecuteFile("res://autoexec.cfg")
 
 func setup_print_command() -> void:
 	var printCmd: ConsoleCommand = get_command("print")
