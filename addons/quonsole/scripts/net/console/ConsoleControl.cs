@@ -568,17 +568,18 @@ public partial class ConsoleControl : Control
 
 		AppendHistory(newText);
 
-		if (_inputControl != null)
-		{
-			_inputControl.Text = string.Empty;
-		}
-
 		if (_outputControl != null)
 		{
 			_outputControl.AppendText($"> {FilterText(newText)}\n");
 		}
 
 		Execute(newText);
+
+		if (_inputControl != null)
+		{
+			_inputControl.Text = string.Empty;
+			_inputControl.call_deferred("edit");
+		}
 	}
 
 	private void OutputVerbatim(ConsoleMessageLevel level, string text)
